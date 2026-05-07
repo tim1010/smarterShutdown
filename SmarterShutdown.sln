@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F6053C18-30D6-4CB4-854B-6519F986AD7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterShutdown.Core", "src\SmarterShutdown.Core\SmarterShutdown.Core.csproj", "{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{87F37DC0-6F88-4D63-BE37-8B94FD800641}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterShutdown.Tests", "tests\SmarterShutdown.Tests\SmarterShutdown.Tests.csproj", "{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterShutdown.Service", "src\SmarterShutdown.Service\SmarterShutdown.Service.csproj", "{CFAC5AD0-0726-4F12-AA8C-44520944D5EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmarterShutdown.Notifier", "src\SmarterShutdown.Notifier\SmarterShutdown.Notifier.csproj", "{9890DC0E-831B-411A-83C6-D88B8189AB18}"
+EndProject
+Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "SmarterShutdown.Installer", "src\SmarterShutdown.Installer\SmarterShutdown.Installer.wixproj", "{4BCC5400-2872-4775-9C1D-0AF0183E97D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA}.Debug|Any CPU.Build.0 = Debug|x64
+		{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA}.Release|Any CPU.ActiveCfg = Release|x64
+		{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA}.Release|Any CPU.Build.0 = Release|x64
+		{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFAC5AD0-0726-4F12-AA8C-44520944D5EA}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{CFAC5AD0-0726-4F12-AA8C-44520944D5EA}.Debug|Any CPU.Build.0 = Debug|x64
+		{CFAC5AD0-0726-4F12-AA8C-44520944D5EA}.Release|Any CPU.ActiveCfg = Release|x64
+		{CFAC5AD0-0726-4F12-AA8C-44520944D5EA}.Release|Any CPU.Build.0 = Release|x64
+		{9890DC0E-831B-411A-83C6-D88B8189AB18}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9890DC0E-831B-411A-83C6-D88B8189AB18}.Debug|Any CPU.Build.0 = Debug|x64
+		{9890DC0E-831B-411A-83C6-D88B8189AB18}.Release|Any CPU.ActiveCfg = Release|x64
+		{9890DC0E-831B-411A-83C6-D88B8189AB18}.Release|Any CPU.Build.0 = Release|x64
+		{4BCC5400-2872-4775-9C1D-0AF0183E97D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BCC5400-2872-4775-9C1D-0AF0183E97D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BCC5400-2872-4775-9C1D-0AF0183E97D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BCC5400-2872-4775-9C1D-0AF0183E97D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21FE7B9B-FB02-4BA2-B9C0-E58DC459DCBA} = {F6053C18-30D6-4CB4-854B-6519F986AD7C}
+		{C8FDF93A-B1E6-41BA-9E6B-AC16AF8FC4EB} = {87F37DC0-6F88-4D63-BE37-8B94FD800641}
+		{CFAC5AD0-0726-4F12-AA8C-44520944D5EA} = {F6053C18-30D6-4CB4-854B-6519F986AD7C}
+		{9890DC0E-831B-411A-83C6-D88B8189AB18} = {F6053C18-30D6-4CB4-854B-6519F986AD7C}
+		{4BCC5400-2872-4775-9C1D-0AF0183E97D4} = {F6053C18-30D6-4CB4-854B-6519F986AD7C}
+	EndGlobalSection
+EndGlobal

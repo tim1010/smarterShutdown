@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<policyDefinitionResources revision="1.0" schemaVersion="1.0"
+                           xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <displayName>SmarterShutdown</displayName>
+  <description>Daily shutdown scheduling for Intune-managed Windows devices.</description>
+
+  <resources>
+    <stringTable>
+
+      <string id="SUPPORTED_Win10_21H2">Windows 10 21H2 (build 19044) and later, Windows 11.</string>
+
+      <string id="Cat_SmarterShutdown">SmarterShutdown</string>
+      <string id="Cat_SmarterShutdown_Help">Settings for the SmarterShutdown agent.</string>
+      <string id="Cat_Scheduling">Shutdown Scheduling</string>
+      <string id="Cat_Scheduling_Help">Schedule, warning, and deferral settings.</string>
+
+      <string id="Pol_Enabled">Enable scheduled shutdown</string>
+      <string id="Pol_Enabled_Help">Master switch for the SmarterShutdown agent. When disabled, no scheduled action runs.</string>
+
+      <string id="Pol_ShutdownTime">Shutdown time</string>
+      <string id="Pol_ShutdownTime_Help">24-hour time string in the form HH:mm — for example "22:00" or "07:30".</string>
+
+      <string id="Pol_ActiveDays">Active days (bitmask)</string>
+      <string id="Pol_ActiveDays_Help">Bitmask of days on which the action runs. Sum the values:
+Sunday = 1
+Monday = 2
+Tuesday = 4
+Wednesday = 8
+Thursday = 16
+Friday = 32
+Saturday = 64
+
+Examples:
+  62 = Mon-Fri (weekdays)
+  127 = every day
+  65 = Sun + Sat (weekend)</string>
+
+      <string id="Pol_ShutdownAction">Action</string>
+      <string id="Pol_ShutdownAction_Help">What to do at the configured time.</string>
+      <string id="Action_Shutdown">Shut down</string>
+      <string id="Action_Hibernate">Hibernate</string>
+      <string id="Action_Sleep">Sleep</string>
+
+      <string id="Pol_ForceShutdown">Force-close open applications</string>
+      <string id="Pol_ForceShutdown_Help">When enabled, applications with unsaved work are forcibly closed at action time. When disabled, an application can block the action by refusing to close.</string>
+
+      <string id="Pol_SkipIfOnBattery">Skip when on battery</string>
+      <string id="Pol_SkipIfOnBattery_Help">When enabled, the action is skipped if the device is currently running on battery power.</string>
+
+      <string id="Pol_WarningMinutes">Warning minutes</string>
+      <string id="Pol_WarningMinutes_Help">Minutes before the action that the user warning popup is shown.</string>
+
+      <string id="Pol_WarningMessage">Warning message</string>
+      <string id="Pol_WarningMessage_Help">Custom message text shown in the countdown popup. Leave blank to use the built-in default ("Please save your work.").</string>
+
+      <string id="Pol_AllowPostpone">Allow user to postpone</string>
+      <string id="Pol_AllowPostpone_Help">When enabled, the user may delay the action by clicking Postpone in the warning popup, up to the configured maximum.</string>
+
+      <string id="Pol_PostponeMinutes">Minutes per postpone</string>
+      <string id="Pol_PostponeMinutes_Help">Minutes that each postpone delays the action.</string>
+
+      <string id="Pol_MaxPostpones">Maximum postpones per cycle</string>
+      <string id="Pol_MaxPostpones_Help">Maximum number of times a user can postpone within a single shutdown cycle. Set to 0 for unlimited.</string>
+
+      <string id="Pol_IdleThresholdMinutes">Idle threshold (minutes)</string>
+      <string id="Pol_IdleThresholdMinutes_Help">Minutes of inactivity before the device is considered idle. Default: 30.</string>
+
+      <string id="Pol_IdleWarningMinutes">Idle warning minutes</string>
+      <string id="Pol_IdleWarningMinutes_Help">Shortened warning period applied when the device is idle. Default: 2.</string>
+
+      <string id="Pol_TeamsDefer">Defer for active Teams calls</string>
+      <string id="Pol_TeamsDefer_Help">When enabled, the action is deferred while the user is in an active Teams call.</string>
+
+      <string id="Pol_TeamsDeferMaxMinutes">Teams defer max (minutes)</string>
+      <string id="Pol_TeamsDeferMaxMinutes_Help">Maximum total minutes the action will defer for a Teams call before proceeding. Default: 60.</string>
+
+      <string id="Pol_EventLogLevel">Event log level</string>
+      <string id="Pol_EventLogLevel_Help">How much detail SmarterShutdown writes to the Windows Application event log.</string>
+      <string id="LogLevel_Off">Off</string>
+      <string id="LogLevel_Errors">Errors only</string>
+      <string id="LogLevel_Warnings">Warnings and errors</string>
+      <string id="LogLevel_Info">Informational, warnings, and errors</string>
+
+    </stringTable>
+
+    <presentationTable>
+      <presentation id="Pol_ShutdownTime">
+        <textBox refId="ShutdownTime"><label>Time (HH:mm):</label><defaultValue>22:00</defaultValue></textBox>
+      </presentation>
+      <presentation id="Pol_ActiveDays">
+        <decimalTextBox refId="ActiveDays" defaultValue="62">Days bitmask:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_ShutdownAction">
+        <dropdownList refId="ShutdownAction" defaultItem="0">Action:</dropdownList>
+      </presentation>
+      <presentation id="Pol_WarningMinutes">
+        <decimalTextBox refId="WarningMinutes" defaultValue="15">Minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_WarningMessage">
+        <textBox refId="WarningMessage"><label>Message:</label></textBox>
+      </presentation>
+      <presentation id="Pol_PostponeMinutes">
+        <decimalTextBox refId="PostponeMinutes" defaultValue="15">Minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_MaxPostpones">
+        <decimalTextBox refId="MaxPostpones" defaultValue="3">Max (0 = unlimited):</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_IdleThresholdMinutes">
+        <decimalTextBox refId="IdleThresholdMinutes" defaultValue="30">Minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_IdleWarningMinutes">
+        <decimalTextBox refId="IdleWarningMinutes" defaultValue="2">Minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_TeamsDeferMaxMinutes">
+        <decimalTextBox refId="TeamsDeferMaxMinutes" defaultValue="60">Max minutes:</decimalTextBox>
+      </presentation>
+      <presentation id="Pol_EventLogLevel">
+        <dropdownList refId="EventLogLevel" defaultItem="3">Log level:</dropdownList>
+      </presentation>
+    </presentationTable>
+
+  </resources>
+</policyDefinitionResources>

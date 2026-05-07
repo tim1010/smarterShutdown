@@ -1,0 +1,45 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <OutputName>SmarterShutdown</OutputName>
+    <Platform>x64</Platform>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+
+    <!-- Inputs harvested by Product.wxs -->
+    <PublishRoot>$(MSBuildThisFileDirectory)bin\publish\</PublishRoot>
+    <PublishService>$(PublishRoot)Service\</PublishService>
+    <PublishNotifier>$(PublishRoot)Notifier\</PublishNotifier>
+
+    <DefineConstants>
+      PublishService=$(PublishService);
+      PublishNotifier=$(PublishNotifier)
+    </DefineConstants>
+
+    <!--
+      Suppress ICE80 on bulk-harvested files. The auto-generated Components from <Files>
+      are flagged as 32-bit by light.exe ICE validation, but the package itself is x64 and
+      Windows Installer honors the package-level architecture at install time. Manual
+      Components below explicitly set Bitness="always64" so they pass ICE80 cleanly.
+    -->
+    <SuppressIces>ICE80</SuppressIces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!--
+    Publish the Service and Notifier as framework-dependent x64 exes before WiX harvests them.
+    Target machines must have the .NET 8 runtime installed; the MSI does not bundle it.
+  -->
+  <Target Name="PublishDependencies" BeforeTargets="BeforeBuild">
+    <MSBuild Projects="..\SmarterShutdown.Service\SmarterShutdown.Service.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=false;PublishDir=$(PublishService)" />
+    <MSBuild Projects="..\SmarterShutdown.Notifier\SmarterShutdown.Notifier.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=false;PublishDir=$(PublishNotifier)" />
+  </Target>
+
+</Project>

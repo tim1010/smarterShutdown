@@ -1,0 +1,52 @@
+<Window x:Class="SmarterShutdown.Notifier.Views.CountdownWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SmarterShutdown"
+        Width="460" Height="260"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        ResizeMode="NoResize"
+        SizeToContent="Manual"
+        ShowInTaskbar="True">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Your computer will shut down in:"
+                   FontSize="16" />
+
+        <TextBlock Grid.Row="1"
+                   x:Name="CountdownText"
+                   FontSize="56"
+                   FontWeight="Light"
+                   Margin="0,8,0,8"
+                   HorizontalAlignment="Center"
+                   Text="--:--" />
+
+        <TextBlock Grid.Row="2"
+                   x:Name="MessageText"
+                   TextWrapping="Wrap"
+                   Foreground="#444"
+                   Text="Please save your work."/>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,12,0,0">
+            <TextBlock x:Name="PostponesText"
+                       VerticalAlignment="Center"
+                       Margin="0,0,16,0"
+                       Foreground="#666" />
+            <Button x:Name="PostponeButton"
+                    Content="Postpone"
+                    Click="PostponeButton_Click"
+                    Padding="16,6"
+                    MinWidth="100" />
+        </StackPanel>
+    </Grid>
+</Window>

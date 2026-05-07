@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SmarterShutdown ADMX template.
+  Namespace: SmarterShutdown (final — changing breaks existing Intune Configuration Profiles).
+  Registry root: HKLM\SOFTWARE\Policies\SmarterShutdown
+-->
+<policyDefinitions revision="1.0" schemaVersion="1.0"
+                   xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions"
+                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <policyNamespaces>
+    <target prefix="smartershutdown" namespace="SmarterShutdown.Policies.SmarterShutdown" />
+  </policyNamespaces>
+
+  <resources minRequiredRevision="1.0" />
+
+  <supportedOn>
+    <definitions>
+      <definition name="SUPPORTED_Win10_21H2"
+                  displayName="$(string.SUPPORTED_Win10_21H2)" />
+    </definitions>
+  </supportedOn>
+
+  <categories>
+    <category name="SmarterShutdown" displayName="$(string.Cat_SmarterShutdown)"
+              explainText="$(string.Cat_SmarterShutdown_Help)" />
+    <category name="Scheduling" displayName="$(string.Cat_Scheduling)"
+              explainText="$(string.Cat_Scheduling_Help)">
+      <parentCategory ref="SmarterShutdown" />
+    </category>
+  </categories>
+
+  <policies>
+
+    <!-- Master switch -->
+    <policy name="Enabled" class="Machine"
+            displayName="$(string.Pol_Enabled)"
+            explainText="$(string.Pol_Enabled_Help)"
+            key="SOFTWARE\Policies\SmarterShutdown" valueName="Enabled">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <enabledValue><decimal value="1" /></enabledValue>
+      <disabledValue><decimal value="0" /></disabledValue>
+    </policy>
+
+    <!-- Shutdown time (HH:mm) -->
+    <policy name="ShutdownTime" class="Machine"
+            displayName="$(string.Pol_ShutdownTime)"
+            explainText="$(string.Pol_ShutdownTime_Help)"
+            presentation="$(presentation.Pol_ShutdownTime)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <text id="ShutdownTime" valueName="ShutdownTime" required="true" maxLength="5" />
+      </elements>
+    </policy>
+
+    <!-- Active days bitmask (Sun=1 Mon=2 Tue=4 Wed=8 Thu=16 Fri=32 Sat=64) -->
+    <policy name="ActiveDays" class="Machine"
+            displayName="$(string.Pol_ActiveDays)"
+            explainText="$(string.Pol_ActiveDays_Help)"
+            presentation="$(presentation.Pol_ActiveDays)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="ActiveDays" valueName="ActiveDays" required="true" minValue="0" maxValue="127" />
+      </elements>
+    </policy>
+
+    <!-- Shutdown action (0=Shutdown, 1=Hibernate, 2=Sleep) -->
+    <policy name="ShutdownAction" class="Machine"
+            displayName="$(string.Pol_ShutdownAction)"
+            explainText="$(string.Pol_ShutdownAction_Help)"
+            presentation="$(presentation.Pol_ShutdownAction)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <enum id="ShutdownAction" valueName="ShutdownAction" required="true">
+          <item displayName="$(string.Action_Shutdown)"><value><decimal value="0" /></value></item>
+          <item displayName="$(string.Action_Hibernate)"><value><decimal value="1" /></value></item>
+          <item displayName="$(string.Action_Sleep)"><value><decimal value="2" /></value></item>
+        </enum>
+      </elements>
+    </policy>
+
+    <policy name="ForceShutdown" class="Machine"
+            displayName="$(string.Pol_ForceShutdown)"
+            explainText="$(string.Pol_ForceShutdown_Help)"
+            key="SOFTWARE\Policies\SmarterShutdown" valueName="ForceShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <enabledValue><decimal value="1" /></enabledValue>
+      <disabledValue><decimal value="0" /></disabledValue>
+    </policy>
+
+    <policy name="SkipIfOnBattery" class="Machine"
+            displayName="$(string.Pol_SkipIfOnBattery)"
+            explainText="$(string.Pol_SkipIfOnBattery_Help)"
+            key="SOFTWARE\Policies\SmarterShutdown" valueName="SkipIfOnBattery">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <enabledValue><decimal value="1" /></enabledValue>
+      <disabledValue><decimal value="0" /></disabledValue>
+    </policy>
+
+    <policy name="WarningMinutes" class="Machine"
+            displayName="$(string.Pol_WarningMinutes)"
+            explainText="$(string.Pol_WarningMinutes_Help)"
+            presentation="$(presentation.Pol_WarningMinutes)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="WarningMinutes" valueName="WarningMinutes" required="true" minValue="0" maxValue="240" />
+      </elements>
+    </policy>
+
+    <policy name="WarningMessage" class="Machine"
+            displayName="$(string.Pol_WarningMessage)"
+            explainText="$(string.Pol_WarningMessage_Help)"
+            presentation="$(presentation.Pol_WarningMessage)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <text id="WarningMessage" valueName="WarningMessage" maxLength="500" />
+      </elements>
+    </policy>
+
+    <policy name="AllowPostpone" class="Machine"
+            displayName="$(string.Pol_AllowPostpone)"
+            explainText="$(string.Pol_AllowPostpone_Help)"
+            key="SOFTWARE\Policies\SmarterShutdown" valueName="AllowPostpone">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <enabledValue><decimal value="1" /></enabledValue>
+      <disabledValue><decimal value="0" /></disabledValue>
+    </policy>
+
+    <policy name="PostponeMinutes" class="Machine"
+            displayName="$(string.Pol_PostponeMinutes)"
+            explainText="$(string.Pol_PostponeMinutes_Help)"
+            presentation="$(presentation.Pol_PostponeMinutes)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="PostponeMinutes" valueName="PostponeMinutes" required="true" minValue="1" maxValue="240" />
+      </elements>
+    </policy>
+
+    <policy name="MaxPostpones" class="Machine"
+            displayName="$(string.Pol_MaxPostpones)"
+            explainText="$(string.Pol_MaxPostpones_Help)"
+            presentation="$(presentation.Pol_MaxPostpones)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="MaxPostpones" valueName="MaxPostpones" required="true" minValue="0" maxValue="100" />
+      </elements>
+    </policy>
+
+    <policy name="IdleThresholdMinutes" class="Machine"
+            displayName="$(string.Pol_IdleThresholdMinutes)"
+            explainText="$(string.Pol_IdleThresholdMinutes_Help)"
+            presentation="$(presentation.Pol_IdleThresholdMinutes)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="IdleThresholdMinutes" valueName="IdleThresholdMinutes" required="true" minValue="1" maxValue="480" />
+      </elements>
+    </policy>
+
+    <policy name="IdleWarningMinutes" class="Machine"
+            displayName="$(string.Pol_IdleWarningMinutes)"
+            explainText="$(string.Pol_IdleWarningMinutes_Help)"
+            presentation="$(presentation.Pol_IdleWarningMinutes)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="IdleWarningMinutes" valueName="IdleWarningMinutes" required="true" minValue="0" maxValue="60" />
+      </elements>
+    </policy>
+
+    <policy name="TeamsDefer" class="Machine"
+            displayName="$(string.Pol_TeamsDefer)"
+            explainText="$(string.Pol_TeamsDefer_Help)"
+            key="SOFTWARE\Policies\SmarterShutdown" valueName="TeamsDefer">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <enabledValue><decimal value="1" /></enabledValue>
+      <disabledValue><decimal value="0" /></disabledValue>
+    </policy>
+
+    <policy name="TeamsDeferMaxMinutes" class="Machine"
+            displayName="$(string.Pol_TeamsDeferMaxMinutes)"
+            explainText="$(string.Pol_TeamsDeferMaxMinutes_Help)"
+            presentation="$(presentation.Pol_TeamsDeferMaxMinutes)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <decimal id="TeamsDeferMaxMinutes" valueName="TeamsDeferMaxMinutes" required="true" minValue="1" maxValue="480" />
+      </elements>
+    </policy>
+
+    <policy name="EventLogLevel" class="Machine"
+            displayName="$(string.Pol_EventLogLevel)"
+            explainText="$(string.Pol_EventLogLevel_Help)"
+            presentation="$(presentation.Pol_EventLogLevel)"
+            key="SOFTWARE\Policies\SmarterShutdown">
+      <parentCategory ref="Scheduling" />
+      <supportedOn ref="smartershutdown:SUPPORTED_Win10_21H2" />
+      <elements>
+        <enum id="EventLogLevel" valueName="EventLogLevel" required="true">
+          <item displayName="$(string.LogLevel_Off)"><value><decimal value="0" /></value></item>
+          <item displayName="$(string.LogLevel_Errors)"><value><decimal value="1" /></value></item>
+          <item displayName="$(string.LogLevel_Warnings)"><value><decimal value="2" /></value></item>
+          <item displayName="$(string.LogLevel_Info)"><value><decimal value="3" /></value></item>
+        </enum>
+      </elements>
+    </policy>
+
+  </policies>
+</policyDefinitions>

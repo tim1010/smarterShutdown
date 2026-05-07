@@ -1,0 +1,53 @@
+# .NET build outputs
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio / Rider / IDE
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Symbols
+*.pdb
+
+# WiX intermediates
+*.wixpdb
+*.wixobj
+
+# Test output
+TestResults/
+coverage.*.xml
+*.coverage
+
+# NuGet
+.nuget/
+*.nupkg
+project.lock.json
+project.assets.json
+
+# Project-local artefacts (not tracked — built on demand)
+dist/
+tools/
+
+# Log files from manual install / smoke tests
+*.log
+install.log
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Editor swap files
+*.swp
+*~
+
+# Claude Code local state (per-user; never tracked)
+.claude/

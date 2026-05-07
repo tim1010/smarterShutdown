@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SmarterShutdown MSI.
+  Layout:
+    Program Files\SmarterShutdown\Service\   — SYSTEM service, auto-start, framework-dependent .NET 8
+    Program Files\SmarterShutdown\Notifier\  — per-user tray app, started via HKLM\Run
+
+  Build flow:
+    1. dotnet publish src\SmarterShutdown.Service  (handled automatically by wixproj)
+    2. dotnet publish src\SmarterShutdown.Notifier (handled automatically by wixproj)
+    3. WiX harvests bin\publish\Service\** and bin\publish\Notifier\** into the MSI.
+
+  Target machines must already have the .NET 8 runtime installed (Desktop runtime + Hosting runtime
+  for the Service). The MSI does not bundle the runtime; document the prerequisite for IT admins.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <Package Name="SmarterShutdown"
+           Manufacturer="SmarterShutdown"
+           Version="1.0.0.0"
+           UpgradeCode="d4c87fd9-5c55-4f01-8d32-a16d0b6e3a72"
+           Scope="perMachine"
+           InstallerVersion="500"
+           Compressed="yes">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of SmarterShutdown is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="Main" Title="SmarterShutdown" Level="1">
+      <ComponentGroupRef Id="ServiceComponentGroup" />
+      <ComponentGroupRef Id="NotifierComponentGroup" />
+      <ComponentRef Id="ServiceInstall" />
+      <ComponentRef Id="NotifierAutoStart" />
+      <ComponentRef Id="EventLogSource" />
+    </Feature>
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="SmarterShutdown">
+        <Directory Id="ServiceDir" Name="Service" />
+        <Directory Id="NotifierDir" Name="Notifier" />
+      </Directory>
+    </StandardDirectory>
+
+    <!--
+      Service binary + Windows Service install/start/stop/uninstall.
+      Component GUID = "*" generates a stable GUID derived from the KeyPath, which keeps upgrades
+      idempotent without us having to hand-track GUIDs.
+    -->
+    <Component Id="ServiceInstall" Directory="ServiceDir" Guid="*" Bitness="always64">
+      <File Id="ServiceExe"
+            Source="$(var.PublishService)SmarterShutdown.Service.exe"
+            KeyPath="yes" />
+
+      <ServiceInstall Id="SmarterShutdownService"
+                      Name="SmarterShutdown"
+                      DisplayName="SmarterShutdown"
+                      Description="Daily shutdown scheduling agent for Intune-managed devices."
+                      Type="ownProcess"
+                      Start="auto"
+                      ErrorControl="normal"
+                      Account="LocalSystem" />
+
+      <ServiceControl Id="SmarterShutdownServiceControl"
+                      Name="SmarterShutdown"
+                      Start="install"
+                      Stop="both"
+                      Remove="uninstall"
+                      Wait="yes" />
+    </Component>
+
+    <!--
+      Notifier binary + auto-start at login. HKLM\...\Run applies to all logged-on users so each
+      user session gets its own Notifier process — required because the SYSTEM service cannot
+      reach user-session UI or audio sessions.
+    -->
+    <Component Id="NotifierAutoStart" Directory="NotifierDir" Guid="*" Bitness="always64">
+      <File Id="NotifierExe"
+            Source="$(var.PublishNotifier)SmarterShutdown.Notifier.exe"
+            KeyPath="yes" />
+
+      <RegistryValue Root="HKLM"
+                     Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                     Name="SmarterShutdown.Notifier"
+                     Value="&quot;[NotifierDir]SmarterShutdown.Notifier.exe&quot;"
+                     Type="string" />
+    </Component>
+
+    <!--
+      EventLog source registration. EventMessageFile points at System.Diagnostics.EventLog.Messages.dll,
+      which ships with .NET and contains generic message-table resources for arbitrary event IDs
+      (the Microsoft.Extensions.Logging.EventLog provider is designed to be paired with it). Without
+      this, Event Viewer renders "The description for Event ID cannot be found" — the underlying
+      message text still gets logged, but the Viewer chrome looks broken.
+    -->
+    <Component Id="EventLogSource" Directory="ServiceDir" Guid="*" Bitness="always64">
+      <RegistryKey Root="HKLM"
+                   Key="SYSTEM\CurrentControlSet\Services\EventLog\Application\SmarterShutdown">
+        <RegistryValue Name="EventMessageFile"
+                       Value="[ServiceDir]System.Diagnostics.EventLog.Messages.dll"
+                       Type="expandable"
+                       KeyPath="yes" />
+        <RegistryValue Name="TypesSupported"
+                       Value="7"
+                       Type="integer" />
+      </RegistryKey>
+    </Component>
+
+    <!--
+      Launch the Notifier in the install user's session immediately after install completes.
+      Useful for manual / single-machine installs where the admin is logged on now and doesn't
+      want to log out just to get the tray icon. For Intune (SYSTEM, no interactive user) the
+      shell exec has nothing to impersonate and silently no-ops; Return="ignore" guarantees the
+      install still reports success in that case. The HKLM\...\Run entry handles all subsequent
+      logins on the device.
+    -->
+    <Property Id="WixShellExecTarget" Value="[#NotifierExe]" />
+    <CustomAction Id="LaunchNotifier"
+                  BinaryRef="Wix4UtilCA_X64"
+                  DllEntry="WixShellExec"
+                  Execute="immediate"
+                  Impersonate="yes"
+                  Return="ignore" />
+    <InstallExecuteSequence>
+      <Custom Action="LaunchNotifier" After="InstallFinalize" Condition="NOT Installed AND NOT REMOVE" />
+    </InstallExecuteSequence>
+
+  </Package>
+
+  <!--
+    Bulk file harvest from the publish folders. <Files> is only valid at Fragment scope in WiX 4.
+    The two main exes are excluded — they live in manually-defined components above so they
+    can carry their ServiceInstall / Run-key registrations.
+  -->
+  <!--
+    Bulk-harvest dependencies (DLLs + .deps.json + .runtimeconfig.json). The .exe lives in its
+    own component above so it can carry ServiceInstall / Run-key registration. PDBs are skipped
+    so debug symbols don't ship in production.
+  -->
+  <Fragment>
+    <ComponentGroup Id="ServiceComponentGroup" Directory="ServiceDir">
+      <Files Include="$(var.PublishService)*.dll" />
+      <Files Include="$(var.PublishService)*.json" />
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="NotifierComponentGroup" Directory="NotifierDir">
+      <Files Include="$(var.PublishNotifier)*.dll" />
+      <Files Include="$(var.PublishNotifier)*.json" />
+    </ComponentGroup>
+  </Fragment>
+
+</Wix>
