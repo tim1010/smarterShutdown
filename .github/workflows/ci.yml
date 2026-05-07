@@ -28,8 +28,11 @@ jobs:
       - name: Restore
         run: dotnet restore SmarterShutdown.sln
 
+      # UseSharedCompilation=false avoids a Roslyn build-server file-lock race in parallel
+      # builds that produces flaky CS2012 errors on net8.0-windows multi-project solutions.
+      # The penalty is a slightly slower build — fine for CI, not worth fighting.
       - name: Build
-        run: dotnet build SmarterShutdown.sln --configuration Release --no-restore
+        run: dotnet build SmarterShutdown.sln --configuration Release --no-restore -p:UseSharedCompilation=false
 
       - name: Test
         run: >
